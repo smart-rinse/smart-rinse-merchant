@@ -112,7 +112,6 @@ class LaundryRepository private constructor(
         longitude: String,
         jamBuka: String,
         jamTutup: String,
-        photo: String,
         rekening: Int
     ) {
         _isLoading.value = true
@@ -125,7 +124,6 @@ class LaundryRepository private constructor(
             longitude,
             jamBuka,
             jamTutup,
-            photo,
             rekening
         )
 

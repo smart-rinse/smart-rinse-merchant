@@ -37,7 +37,6 @@ interface APIService {
         @Field("longitude") longitude: String,
         @Field("jam_buka") jam_buka: String,
         @Field("jam_tutup") jam_tutup: String,
-        @Field("photo") photo: String,
         @Field("rekening") rekening: Int
     ): Call<MerchantCreateResponse>
 }

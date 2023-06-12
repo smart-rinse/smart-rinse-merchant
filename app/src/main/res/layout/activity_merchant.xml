@@ -6,4 +6,221 @@
     android:layout_height="match_parent"
     tools:context=".ui.merchant.MerchantActivity">
 
+    <TextView
+        android:id="@+id/label_info_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/poppins_regular"
+        android:text="Silahkan isi form berikut ini untuk membuka merchant laundry Anda"
+        android:textColor="@color/sr_black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_form_merchant"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/label_info_title">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_name_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Nama Merchant"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_year_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Tahun Berdiri"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_name_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="4" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_address_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Alamat Merchant"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_year_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textMultiLine" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_latitude_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Latitude"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_address_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_latitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_longitude_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Longitude"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_latitude_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_longitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_open_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Jam Buka"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@id/edt_close_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_longitude_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_open"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:maxLength="5" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_close_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Jam Tutup"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/edt_open_layout"
+            app:layout_constraintTop_toBottomOf="@id/edt_longitude_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_close"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:maxLength="5" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edt_rekening_layout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:hint="Nomor Rekening"
+            app:boxBackgroundColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edt_open_layout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_rekening"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="20" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/poppins_medium"
+        android:letterSpacing="0.05"
+        android:paddingVertical="8dp"
+        android:text="BUAT MERCHANT"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

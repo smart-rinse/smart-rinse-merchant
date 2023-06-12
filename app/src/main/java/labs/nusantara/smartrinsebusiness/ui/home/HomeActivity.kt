@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import labs.nusantara.smartrinsebusiness.R
 import labs.nusantara.smartrinsebusiness.databinding.ActivityHomeBinding
 import labs.nusantara.smartrinsebusiness.ui.login.LoginActivity
+import labs.nusantara.smartrinsebusiness.ui.merchant.MerchantActivity
 import labs.nusantara.smartrinsebusiness.utils.ViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
@@ -37,7 +38,8 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun gotoMerchant() {
-        Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, MerchantActivity::class.java)
+        startActivity(intent)
     }
 
     private fun gotoService() {

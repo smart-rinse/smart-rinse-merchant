@@ -7,11 +7,16 @@ import kotlinx.coroutines.launch
 import labs.nusantara.smartrinsebusiness.repository.LaundryRepository
 import labs.nusantara.smartrinsebusiness.service.response.MerchantCreateResponse
 import labs.nusantara.smartrinsebusiness.utils.Event
+import labs.nusantara.smartrinsebusiness.utils.SessionModel
 
 class MerchantViewModel(private val repository: LaundryRepository) : ViewModel() {
     val laundryCreateResponse: LiveData<MerchantCreateResponse> = repository.merchantCreateResponse
     val isLoading: LiveData<Boolean> = repository.isLoading
     val toastText: LiveData<Event<String>> = repository.toastText
+
+    fun getSession(): LiveData<SessionModel> {
+        return repository.getSession()
+    }
 
     fun postMerchant(
         token: String,
@@ -22,7 +27,6 @@ class MerchantViewModel(private val repository: LaundryRepository) : ViewModel()
         longitude: String,
         jamBuka: String,
         jamTutup: String,
-        photo: String,
         rekening: Int
     ) {
         viewModelScope.launch {
@@ -35,7 +39,6 @@ class MerchantViewModel(private val repository: LaundryRepository) : ViewModel()
                 longitude,
                 jamBuka,
                 jamTutup,
-                photo,
                 rekening
             )
         }
