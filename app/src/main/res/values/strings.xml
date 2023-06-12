@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Smart Rinse Business</string>
+    <string name="logo_smart_rinse">Logo Smart Rinse</string>
+
+
+    <string name="login_account">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confpassword">Konfirmasi Password</string>
+    <string name="login">Login</string>
+    <string name="not_account">Belum memiliki akun?</string>
+    <string name="register">Registrasi</string>
+    <string name="have_account">Sudah memiliki akun?</string>
+    <string name="register_account">Registrasi Akun</string>
+    <string name="rule_nama">Masukkan nama Anda dengan benar</string>
+    <string name="rule_email">Masukkan email dengan benar</string>
+    <string name="rule_password">Masukkan password dengan benar</string>
+    <string name="rule_confpassword">Masukkan konfirmasi password dengan benar</string>
+
+    <string name="title_confirm_logout">Konfirmasi Logout</string>
+    <string name="desc_confirm_logout">Anda yakin akan keluar aplikasi ini?</string>
+</resources>
