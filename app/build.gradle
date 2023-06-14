@@ -17,7 +17,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "API_URL", '"https://api-smartrinse-test-fkkhrt32qa-uc.a.run.app/"')
+        buildConfigField("String", "API_URL", '"https://api-smartrinse-oqy2ejn27a-et.a.run.app/"')
     }
 
     buildTypes {

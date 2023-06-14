@@ -1,7 +1,8 @@
 package labs.nusantara.smartrinsebusiness.utils
 
 data class SessionModel(
-    val userId: String,
+    val ownerId: String,
+    val isLaundry: Boolean,
     val email: String,
     val name: String,
     val token: String,

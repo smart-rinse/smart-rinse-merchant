@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import labs.nusantara.smartrinsebusiness.R
 import labs.nusantara.smartrinsebusiness.databinding.ActivityLoginBinding
 import labs.nusantara.smartrinsebusiness.ui.home.HomeActivity
-import labs.nusantara.smartrinsebusiness.ui.home.HomeViewModel
 import labs.nusantara.smartrinsebusiness.ui.register.RegisterActivity
 import labs.nusantara.smartrinsebusiness.utils.SessionModel
 import labs.nusantara.smartrinsebusiness.utils.ViewModelFactory
@@ -67,8 +66,9 @@ class LoginActivity : AppCompatActivity() {
                         this@LoginActivity, toastTextNew, Toast.LENGTH_SHORT
                     ).show()
                 }else {
+                    val toastTextNew = "Login Berhasil"
                     Toast.makeText(
-                        this@LoginActivity, toastText, Toast.LENGTH_SHORT
+                        this@LoginActivity, toastTextNew, Toast.LENGTH_SHORT
                     ).show()
                 }
 
@@ -80,7 +80,8 @@ class LoginActivity : AppCompatActivity() {
             if (response.success) {
                 saveSession(
                     SessionModel(
-                        response.data.userId,
+                        response.data.ownerId,
+                        response.data.isLaundry,
                         response.data.email,
                         response.data.name,
                         AUTH_KEY + (response.data.accessToken),

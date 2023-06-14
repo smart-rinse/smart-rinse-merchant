@@ -14,6 +14,7 @@ class SessionPreferences private constructor(private val dataStore: DataStore<Pr
         return dataStore.data.map { preferences ->
             SessionModel(
                 preferences[ID_KEY] ?: "",
+                preferences[ISLAUNDRY_KEY] ?: false,
                 preferences[EMAIL_KEY] ?: "",
                 preferences[NAME_KEY] ?: "",
                 preferences[TOKEN_KEY] ?: "",
@@ -24,9 +25,10 @@ class SessionPreferences private constructor(private val dataStore: DataStore<Pr
 
     suspend fun saveSession(session: SessionModel) {
         dataStore.edit { preferences ->
-            preferences[ID_KEY] = session.userId
-            preferences[EMAIL_KEY] = session.email
+            preferences[ID_KEY] = session.ownerId
+            preferences[ISLAUNDRY_KEY] = session.isLaundry
             preferences[NAME_KEY] = session.name
+            preferences[EMAIL_KEY] = session.email
             preferences[TOKEN_KEY] = session.token
             preferences[STATE_KEY] = session.isLogin
         }
@@ -48,9 +50,10 @@ class SessionPreferences private constructor(private val dataStore: DataStore<Pr
     companion object {
         @Volatile
         private var INSTANCE: SessionPreferences? = null
-        private val ID_KEY = stringPreferencesKey("userId")
-        private val EMAIL_KEY = stringPreferencesKey("email")
+        private val ID_KEY = stringPreferencesKey("ownerId")
+        private val ISLAUNDRY_KEY = booleanPreferencesKey("isLaundry")
         private val NAME_KEY = stringPreferencesKey("name")
+        private val EMAIL_KEY = stringPreferencesKey("email")
         private val TOKEN_KEY = stringPreferencesKey("token")
         private val STATE_KEY = booleanPreferencesKey("islogin")
 

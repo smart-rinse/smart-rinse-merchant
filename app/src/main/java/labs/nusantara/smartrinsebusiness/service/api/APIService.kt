@@ -1,17 +1,14 @@
 package labs.nusantara.smartrinsebusiness.service.api
 
-import labs.nusantara.smartrinsebusiness.service.response.LoginResponse
-import labs.nusantara.smartrinsebusiness.service.response.MerchantCreateResponse
-import labs.nusantara.smartrinsebusiness.service.response.RegisterResponse
+import labs.nusantara.smartrinsebusiness.service.response.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface APIService {
     @FormUrlEncoded
-    @POST("register")
+    @POST("owner/register")
     fun postRegister(
         @Field("name") name: String,
         @Field("email") email: String,
@@ -20,23 +17,40 @@ interface APIService {
     ): Call<RegisterResponse>
 
     @FormUrlEncoded
-    @POST("login")
+    @POST("owner/login")
     fun postLogin(
         @Field("email") email: String,
         @Field("password") password: String
     ): Call<LoginResponse>
 
-    @FormUrlEncoded
+    @Multipart
     @POST("laundry/create")
     fun postMerchant(
         @Header("Authorization") token: String,
-        @Field("nama_laundry") nama_laundry: String,
-        @Field("tanggal_berdiri") tanggal_berdiri: String,
-        @Field("alamat") alamat: String,
-        @Field("latitude") latitude: String,
-        @Field("longitude") longitude: String,
-        @Field("jam_buka") jam_buka: String,
-        @Field("jam_tutup") jam_tutup: String,
-        @Field("rekening") rekening: Int
+        @Part("nama_laundry") nama_laundry: RequestBody,
+        @Part("tanggal_berdiri") tanggal_berdiri: RequestBody,
+        @Part("alamat") alamat: RequestBody,
+        @Part("latitude") latitude: RequestBody,
+        @Part("longitude") longitude: RequestBody,
+        @Part("jam_buka") jam_buka: RequestBody,
+        @Part("jam_tutup") jam_tutup: RequestBody,
+        @Part("rekening") rekening: RequestBody,
+        @Part("bank") bank: RequestBody,
+        @Part("telephone") telephone: RequestBody,
+        @Part photo: MultipartBody.Part
     ): Call<MerchantCreateResponse>
+
+    @FormUrlEncoded
+    @POST("service/{laundryId}")
+    fun postService(
+        @Header("Authorization") token: String,
+        @Path("laundryId") laundryId: String,
+        @Field("jenis_service") jenis_service: String,
+        @Field("price") price: String
+    ): Call<ServiceCreateResponse>
+
+    @GET("owner/get/laundry")
+    fun getMerchantOwner(
+        @Header("Authorization") token: String
+    ): Call<MerchantOwnerGetResponse>
 }

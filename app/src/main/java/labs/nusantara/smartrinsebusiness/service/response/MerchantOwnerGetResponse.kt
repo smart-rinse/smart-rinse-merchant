@@ -2,25 +2,25 @@ package labs.nusantara.smartrinsebusiness.service.response
 
 import com.google.gson.annotations.SerializedName
 
-data class MerchantCreateResponse(
+data class MerchantOwnerGetResponse(
+
+	@field:SerializedName("data")
+	val data: List<MerchantDataItem>,
 
 	@field:SerializedName("success")
 	val success: Boolean,
 
-	@field:SerializedName("laundry")
-	val laundry: Laundry,
-
 	@field:SerializedName("message")
-	val message: String,
-
-	@field:SerializedName("statusCode")
-	val statusCode: Int
+	val message: String
 )
 
-data class Laundry(
+data class MerchantDataItem(
 
 	@field:SerializedName("jam_tutup")
 	val jamTutup: String,
+
+	@field:SerializedName("count_reviews")
+	val countReviews: Any,
 
 	@field:SerializedName("latitude")
 	val latitude: String,
@@ -28,14 +28,14 @@ data class Laundry(
 	@field:SerializedName("photo")
 	val photo: String,
 
+	@field:SerializedName("average_rating")
+	val averageRating: Any,
+
 	@field:SerializedName("telephone")
 	val telephone: String,
 
 	@field:SerializedName("tanggal_berdiri")
 	val tanggalBerdiri: String,
-
-	@field:SerializedName("ownerId")
-	val ownerId: String,
 
 	@field:SerializedName("nama_laundry")
 	val namaLaundry: String,
@@ -50,7 +50,7 @@ data class Laundry(
 	val bank: String,
 
 	@field:SerializedName("rekening")
-	val rekening: String,
+	val rekening: Int,
 
 	@field:SerializedName("id")
 	val id: String,

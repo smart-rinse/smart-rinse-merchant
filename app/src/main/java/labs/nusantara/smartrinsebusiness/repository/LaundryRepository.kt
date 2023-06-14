@@ -1,5 +1,6 @@
 package labs.nusantara.smartrinsebusiness.repository
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,8 @@ import labs.nusantara.smartrinsebusiness.service.response.*
 import labs.nusantara.smartrinsebusiness.utils.Event
 import labs.nusantara.smartrinsebusiness.utils.SessionModel
 import labs.nusantara.smartrinsebusiness.utils.SessionPreferences
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,6 +38,11 @@ class LaundryRepository private constructor(
     private val _merchantCreateResponse = MutableLiveData<MerchantCreateResponse>()
     val merchantCreateResponse: LiveData<MerchantCreateResponse> = _merchantCreateResponse
 
+    private val _serviceCreateResponse = MutableLiveData<ServiceCreateResponse>()
+    val serviceCreateResponse: LiveData<ServiceCreateResponse> = _serviceCreateResponse
+
+    private val _listMerchant = MutableLiveData<List<MerchantDataItem>>()
+    val listMerchant: LiveData<List<MerchantDataItem>> = _listMerchant
 
     //--------------------------------------------------------
     //POST REGISTER
@@ -105,14 +113,17 @@ class LaundryRepository private constructor(
     //--------------------------------------------------------
     fun postMerchant(
         token: String,
-        namaMerchant: String,
-        tglBerdiri: String,
-        alamat: String,
-        latitude: String,
-        longitude: String,
-        jamBuka: String,
-        jamTutup: String,
-        rekening: Int
+        namaMerchant: RequestBody,
+        tglBerdiri: RequestBody,
+        alamat: RequestBody,
+        latitude: RequestBody,
+        longitude: RequestBody,
+        jamBuka: RequestBody,
+        jamTutup: RequestBody,
+        rekening: RequestBody,
+        bank: RequestBody,
+        telp: RequestBody,
+        imageMultipart: MultipartBody.Part
     ) {
         _isLoading.value = true
         val client = apiService.postMerchant(
@@ -124,8 +135,14 @@ class LaundryRepository private constructor(
             longitude,
             jamBuka,
             jamTutup,
-            rekening
+            rekening,
+            bank,
+            telp,
+            imageMultipart
         )
+
+        Log.d("DATA CLIENT : ", client.toString())
+        Log.d("DATA : ", "$token, $namaMerchant, $tglBerdiri, $alamat, $latitude, $longitude, $jamBuka, $jamTutup, $rekening, $imageMultipart")
 
         client.enqueue(object : Callback<MerchantCreateResponse> {
             override fun onResponse(
@@ -133,6 +150,8 @@ class LaundryRepository private constructor(
                 response: Response<MerchantCreateResponse>
             ) {
                 _isLoading.value = false
+                Log.d("EE : ", response.toString())
+                Log.d("EE : ", response.body().toString())
                 if (response.isSuccessful && response.body() != null) {
                     _merchantCreateResponse.value = response.body()
                     _toastText.value = Event(response.body()?.message.toString())
@@ -148,6 +167,77 @@ class LaundryRepository private constructor(
             override fun onFailure(call: Call<MerchantCreateResponse>, t: Throwable) {
                 _toastText.value = Event(t.message.toString())
                 Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
+            }
+        })
+    }
+
+
+    //--------------------------------------------------------
+    //POST SERVICE
+    //--------------------------------------------------------
+    fun postService(token: String, laundryId: String, jenis: String, price: String) {
+        _isLoading.value = true
+        val client = apiService.postService(token, laundryId, jenis, price)
+
+        client.enqueue(object : Callback<ServiceCreateResponse> {
+            override fun onResponse(
+                call: Call<ServiceCreateResponse>,
+                response: Response<ServiceCreateResponse>
+            ) {
+                _isLoading.value = false
+                Log.d("Err : ", response.toString())
+                if (response.isSuccessful && response.body() != null) {
+                    _serviceCreateResponse.value = response.body()
+                    _toastText.value = Event(response.body()?.message.toString())
+                } else {
+                    _toastText.value = Event("Penambahan service gagal.")
+                    Log.e(
+                        TAG,
+                        "ErrorMessage: ${response.message()}, ${response.body()?.message.toString()}"
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<ServiceCreateResponse>, t: Throwable) {
+                _toastText.value = Event(t.message.toString())
+                Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
+            }
+        })
+    }
+
+    //--------------------------------------------------------
+    //GET MERCHANT
+    //--------------------------------------------------------
+    fun getMerchantOwner(token: String) {
+        _isLoading.value = true
+        val client = apiService.getMerchantOwner(token)
+
+        client.enqueue(object : Callback<MerchantOwnerGetResponse> {
+            @SuppressLint("NullSafeMutableLiveData")
+            override fun onResponse(
+                call: Call<MerchantOwnerGetResponse>,
+                response: Response<MerchantOwnerGetResponse>
+            ) {
+                _isLoading.value = false
+                val listSearch = response.body()?.data
+                Log.d("RESSP : ", listSearch.toString())
+                if (response.isSuccessful) {
+                    val lengthItem = listSearch?.size
+                    if (lengthItem != null) {
+                        _listMerchant.value = listSearch
+                    } else {
+                        _toastText.value = Event("Merchant tidak tersedia")
+                    }
+                } else {
+                    _toastText.value = Event(response.message())
+                    Log.e(TAG, "Error: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<MerchantOwnerGetResponse>, t: Throwable) {
+                _isLoading.value = false
+                _toastText.value = Event("No internet connection")
+                Log.e(TAG, "Error: ${t.message.toString()}")
             }
         })
     }

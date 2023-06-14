@@ -22,11 +22,11 @@ data class Data(
 	@field:SerializedName("name")
 	val name: String,
 
+	@field:SerializedName("ownerId")
+	val ownerId: String,
+
 	@field:SerializedName("accessToken")
 	val accessToken: String,
-
-	@field:SerializedName("userId")
-	val userId: String,
 
 	@field:SerializedName("email")
 	val email: String,
