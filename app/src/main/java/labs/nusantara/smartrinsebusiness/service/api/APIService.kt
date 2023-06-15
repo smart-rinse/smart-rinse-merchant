@@ -94,4 +94,21 @@ interface APIService {
         @Header("Authorization") token: String,
         @Path("trxId") trxId: String
     ): Call<TrxUpdateResponse>
+
+    @GET("owner/{ownerId}")
+    fun getOwnerDetail(
+        @Header("Authorization") token: String,
+        @Path("ownerId") ownerId: String
+    ): Call<OwnerGetResponse>
+
+    @Multipart
+    @PUT("owner/editOwner/{ownerId}")
+    fun putProfileOwner(
+        @Header("Authorization") token: String,
+        @Path("ownerId") ownerId: String,
+        @Part("telephone") telephone: RequestBody,
+        @Part("city") city: RequestBody,
+        @Part("gender") gender: RequestBody,
+        @Part photo: MultipartBody.Part,
+    ): Call<OwnerUpdateResponse>
 }

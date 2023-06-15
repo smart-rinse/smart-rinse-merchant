@@ -59,6 +59,11 @@ class LaundryRepository private constructor(
     private val _listStatusTrx = MutableLiveData<TransactionStatus>()
     val listStatusTrx: LiveData<TransactionStatus> = _listStatusTrx
 
+    private val _listOwnerDetail = MutableLiveData<List<OwnerItem>>()
+    val listOwnerDetail: LiveData<List<OwnerItem>> = _listOwnerDetail
+
+    private val _changeProfileResponse = MutableLiveData<OwnerUpdateResponse>()
+
     //--------------------------------------------------------
     //POST REGISTER
     //--------------------------------------------------------
@@ -156,17 +161,12 @@ class LaundryRepository private constructor(
             imageMultipart
         )
 
-        Log.d("DATA CLIENT : ", client.toString())
-        Log.d("DATA : ", "$token, $namaMerchant, $tglBerdiri, $alamat, $latitude, $longitude, $jamBuka, $jamTutup, $rekening, $imageMultipart")
-
         client.enqueue(object : Callback<MerchantCreateResponse> {
             override fun onResponse(
                 call: Call<MerchantCreateResponse>,
                 response: Response<MerchantCreateResponse>
             ) {
                 _isLoading.value = false
-                Log.d("EE : ", response.toString())
-                Log.d("EE : ", response.body().toString())
                 if (response.isSuccessful && response.body() != null) {
                     _merchantCreateResponse.value = response.body()
                     _toastText.value = Event(response.body()?.message.toString())
@@ -222,17 +222,12 @@ class LaundryRepository private constructor(
             imageMultipart
         )
 
-        Log.d("DATA CLIENT : ", client.toString())
-        Log.d("DATA : ", "$token, $namaMerchant, $tglBerdiri, $alamat, $latitude, $longitude, $jamBuka, $jamTutup, $rekening, $imageMultipart")
-
         client.enqueue(object : Callback<MerchantPutResponse> {
             override fun onResponse(
                 call: Call<MerchantPutResponse>,
                 response: Response<MerchantPutResponse>
             ) {
                 _isLoading.value = false
-                Log.d("EE : ", response.toString())
-                Log.d("EE : ", response.body().toString())
                 if (response.isSuccessful && response.body() != null) {
                     _merchantPutResponse.value = response.body()
                     _toastText.value = Event(response.body()?.message.toString())
@@ -266,7 +261,6 @@ class LaundryRepository private constructor(
                 response: Response<ServiceCreateResponse>
             ) {
                 _isLoading.value = false
-                Log.d("Err : ", response.toString())
                 if (response.isSuccessful && response.body() != null) {
                     _serviceCreateResponse.value = response.body()
                     _toastText.value = Event(response.body()?.message.toString())
@@ -301,7 +295,6 @@ class LaundryRepository private constructor(
             ) {
                 _isLoading.value = false
                 val listSearch = response.body()?.data
-                Log.d("RESSP : ", listSearch.toString())
                 if (response.isSuccessful) {
                     val lengthItem = listSearch?.size
                     if (lengthItem != null) {
@@ -406,9 +399,6 @@ class LaundryRepository private constructor(
                 response: Response<OrderGetResponse>
             ) {
                 _isLoading.value = false
-                Log.d("E : ", response.toString())
-                Log.d("EE : ", response.body().toString())
-                Log.d("EEE : ", response.body()?.orders.toString())
                 val listData = response.body()?.orders
                 if (response.isSuccessful) {
                     val lengthItem = listData?.size
@@ -445,9 +435,6 @@ class LaundryRepository private constructor(
                 response: Response<TrxUpdateResponse>
             ) {
                 _isLoading.value = false
-                Log.d("E : ", response.toString())
-                Log.d("EE : ", response.body().toString())
-                Log.d("EEE : ", response.body()?.transaction.toString())
                 val listData = response.body()?.transaction
                 if (response.isSuccessful) {
                     _listStatusTrx.value = listData
@@ -460,6 +447,77 @@ class LaundryRepository private constructor(
             override fun onFailure(call: Call<TrxUpdateResponse>, t: Throwable) {
                 _isLoading.value = false
                 _toastText.value = Event("No internet connection")
+                Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
+            }
+        })
+    }
+
+    //--------------------------------------------------------
+    //GET OWNER DETAIL
+    //--------------------------------------------------------
+    fun getOwnerDetail(token: String, ownerId: String) {
+        _isLoading.value = true
+        val client = apiService.getOwnerDetail(token, ownerId)
+        client.enqueue(object : Callback<OwnerGetResponse> {
+            @SuppressLint("SetTextI18n")
+            override fun onResponse(
+                call: Call<OwnerGetResponse>,
+                response: Response<OwnerGetResponse>
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    val ownerDetail = response.body()?.owner
+                    if (ownerDetail != null) {
+                        _listOwnerDetail.value = listOf(ownerDetail)
+                    } else {
+                        _toastText.value = Event("Transaction not found")
+                    }
+                } else {
+                    _isLoading.value = false
+                    Log.e("MainViewModel", "onFailure: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<OwnerGetResponse>, t: Throwable) {
+                Log.e("MainViewModel", "onFailure: ${t.message}")
+            }
+        })
+    }
+
+
+    fun putProfileOwner(
+        token: String,
+        ownerId: String,
+        userTelp: RequestBody,
+        userCity: RequestBody,
+        userGender: RequestBody,
+        imageMultipart: MultipartBody.Part
+    ) {
+        _isLoading.value = true
+        val client =
+            apiService.putProfileOwner(token, ownerId, userTelp, userCity, userGender, imageMultipart)
+
+        Log.d("Client: ", client.toString())
+        client.enqueue(object : Callback<OwnerUpdateResponse> {
+            override fun onResponse(
+                call: Call<OwnerUpdateResponse>,
+                response: Response<OwnerUpdateResponse>
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful && response.body() != null) {
+                    _changeProfileResponse.value = response.body()
+                    _toastText.value = Event(response.body()?.message.toString())
+                } else {
+                    _toastText.value = Event(response.message().toString())
+                    Log.e(
+                        TAG,
+                        "ErrorMessage: ${response.body()}, ${response.body()?.message.toString()}"
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<OwnerUpdateResponse>, t: Throwable) {
+                _toastText.value = Event(t.message.toString())
                 Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
             }
         })
