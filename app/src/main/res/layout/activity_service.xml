@@ -36,7 +36,7 @@
                 android:id="@+id/cl_form_merchant"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/label_info_title">
@@ -108,7 +108,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Layanan Anda."
+                    android:text="Daftar Layanan Anda"
                     android:textColor="@color/sr_black"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -127,6 +127,33 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/label_info_service"
                     tools:listitem="@layout/item_service" />
+
+                <ImageView
+                    android:id="@+id/image_not_found"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_sad"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/label_info_service"
+                    tools:srcCompat="@tools:sample/avatars"
+                    android:contentDescription="@string/app_name" />
+
+                <TextView
+                    android:id="@+id/tv_not_found"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/poppins_regular"
+                    android:text="Anda belum memiliki layanan laundry.\nSilakan buat layanan terlebih dahulu."
+                    android:visibility="gone"
+                    android:textColor="@color/sr_main_gray"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image_not_found" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"

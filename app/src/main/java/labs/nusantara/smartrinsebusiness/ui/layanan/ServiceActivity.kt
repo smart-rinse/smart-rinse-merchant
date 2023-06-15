@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import labs.nusantara.smartrinsebusiness.R
 import labs.nusantara.smartrinsebusiness.databinding.ActivityServiceBinding
 import labs.nusantara.smartrinsebusiness.utils.ViewModelFactory
@@ -45,6 +46,8 @@ class ServiceActivity : AppCompatActivity() {
                 Toast.makeText(this, "Silakan buat merchant terlebih dahulu.", Toast.LENGTH_SHORT).show()
                 binding.edtJenis.isEnabled = false
                 binding.edtPrice.isEnabled = false
+                binding.imageNotFound.visibility = View.VISIBLE
+                binding.tvNotFound.visibility = View.VISIBLE
                 val backgroundColor = ContextCompat.getColor(this, R.color.sr_white_gray)
                 binding.btnSave.setBackgroundColor(backgroundColor)
 
@@ -62,13 +65,34 @@ class ServiceActivity : AppCompatActivity() {
                     val data = listData?.firstOrNull()
 
                     data?.let {
-                        val data = listData.firstOrNull()
-                        data?.let {
-                            laundryId = it.id
-                        }
+                        laundryId = it.id
+                        loadService(tokenAuth, it.id)
                     }
                 }
             }
+        }
+    }
+
+    private fun loadService(tokenAuth: String, laundryId: String) {
+        serviceViewModel.getServiceOwner(tokenAuth, laundryId)
+        binding.rvService.apply {
+            layoutManager = LinearLayoutManager(this@ServiceActivity)
+            setHasFixedSize(true)
+        }
+
+        serviceViewModel.listServiceOwner.observe(this@ServiceActivity) { listData ->
+            if (listData.isNotEmpty()) {
+                binding.imageNotFound.visibility = View.GONE
+                binding.tvNotFound.visibility = View.GONE
+                binding.rvService.adapter = ServiceAdapter(listData)
+            } else {
+                binding.imageNotFound.visibility = View.VISIBLE
+                binding.tvNotFound.visibility = View.VISIBLE
+                binding.rvService.adapter = null
+            }
+        }
+        serviceViewModel.isLoading.observe(this@ServiceActivity) { load ->
+            showLoading(load)
         }
     }
 

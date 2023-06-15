@@ -53,4 +53,16 @@ interface APIService {
     fun getMerchantOwner(
         @Header("Authorization") token: String
     ): Call<MerchantOwnerGetResponse>
+
+    @GET("service/{laundryId}")
+    fun getServiceOwner(
+        @Header("Authorization") token: String,
+        @Path("laundryId") laundryId: String
+    ): Call<ServiceGetResponse>
+
+    @DELETE("service/{serviceId}")
+    fun delServiceOwner(
+        @Header("Authorization") token: String,
+        @Path("serviceId") serviceId: Int
+    ): Call<ServiceDelResponse>
 }

@@ -44,6 +44,12 @@ class LaundryRepository private constructor(
     private val _listMerchant = MutableLiveData<List<MerchantDataItem>>()
     val listMerchant: LiveData<List<MerchantDataItem>> = _listMerchant
 
+    private val _listServiceOwner = MutableLiveData<List<ServiceGetItem>>()
+    val listServiceOwner: LiveData<List<ServiceGetItem>> = _listServiceOwner
+
+    private val _delServiceOwner = MutableLiveData<ServiceDelResponse>()
+    val delServiceOwner: LiveData<ServiceDelResponse> = _delServiceOwner
+
     //--------------------------------------------------------
     //POST REGISTER
     //--------------------------------------------------------
@@ -238,6 +244,74 @@ class LaundryRepository private constructor(
                 _isLoading.value = false
                 _toastText.value = Event("No internet connection")
                 Log.e(TAG, "Error: ${t.message.toString()}")
+            }
+        })
+    }
+
+    //--------------------------------------------------------
+    //GET SERVICE OWNER
+    //--------------------------------------------------------
+    fun getServiceOwner(token: String, laundryId: String) {
+        _isLoading.value = true
+        val client = apiService.getServiceOwner(token, laundryId)
+
+        client.enqueue(object : Callback<ServiceGetResponse> {
+            @SuppressLint("NullSafeMutableLiveData")
+            override fun onResponse(
+                call: Call<ServiceGetResponse>,
+                response: Response<ServiceGetResponse>
+            ) {
+                _isLoading.value = false
+                val listData = response.body()?.data
+                if (response.isSuccessful) {
+                    val lengthItem = listData?.size
+                    if (lengthItem != null) {
+                        _listServiceOwner.value = listData
+                    } else {
+                        _toastText.value = Event("Order history not found")
+                    }
+                } else {
+                    _toastText.value = Event(response.message())
+                    Log.e(TAG, "ErrorMessage: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ServiceGetResponse>, t: Throwable) {
+                _isLoading.value = false
+                _toastText.value = Event("No internet connection")
+                Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
+            }
+        })
+    }
+
+
+    //--------------------------------------------------------
+    //DELETE SERVICE OWNER
+    //--------------------------------------------------------
+    fun deleteService(token: String, serviceId: Int) {
+        _isLoading.value = true
+        val client = apiService.delServiceOwner(token, serviceId)
+
+        client.enqueue(object : Callback<ServiceDelResponse> {
+            @SuppressLint("NullSafeMutableLiveData")
+            override fun onResponse(
+                call: Call<ServiceDelResponse>,
+                response: Response<ServiceDelResponse>
+            ) {
+                _isLoading.value = false
+                val listData = response.body()
+                if (response.isSuccessful) {
+                    _delServiceOwner.value = listData
+                } else {
+                    _toastText.value = Event(response.message())
+                    Log.e(TAG, "ErrorMessage: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<ServiceDelResponse>, t: Throwable) {
+                _isLoading.value = false
+                _toastText.value = Event("No internet connection")
+                Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
             }
         })
     }
