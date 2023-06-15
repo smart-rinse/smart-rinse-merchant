@@ -1,5 +1,6 @@
 package labs.nusantara.smartrinsebusiness.ui.layanan
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import labs.nusantara.smartrinsebusiness.R
 import labs.nusantara.smartrinsebusiness.databinding.ActivityServiceBinding
+import labs.nusantara.smartrinsebusiness.service.response.ServiceGetItem
+import labs.nusantara.smartrinsebusiness.ui.login.LoginActivity
 import labs.nusantara.smartrinsebusiness.utils.ViewModelFactory
 
 class ServiceActivity : AppCompatActivity() {
@@ -84,7 +87,7 @@ class ServiceActivity : AppCompatActivity() {
             if (listData.isNotEmpty()) {
                 binding.imageNotFound.visibility = View.GONE
                 binding.tvNotFound.visibility = View.GONE
-                binding.rvService.adapter = ServiceAdapter(listData)
+                binding.rvService.adapter = ServiceAdapter(listData as MutableList<ServiceGetItem>, serviceViewModel, tokenAuth)
             } else {
                 binding.imageNotFound.visibility = View.VISIBLE
                 binding.tvNotFound.visibility = View.VISIBLE
@@ -101,7 +104,7 @@ class ServiceActivity : AppCompatActivity() {
             token = it.token
             val tokenAuth = it.token
             if (!it.isLogin) {
-
+                gotoLogin()
             } else {
                 try {
                     val jenisLayanan = binding.edtJenis.text.toString()
@@ -111,6 +114,15 @@ class ServiceActivity : AppCompatActivity() {
                         laundryId?.let { laundryId ->
                             simpanApi(tokenAuth, laundryId, jenisLayanan, priceLayanan)
                         }
+                        binding.edtJenis.setText("")
+                        binding.edtPrice.setText("")
+                        binding.edtJenis.clearFocus()
+                        binding.edtPrice.clearFocus()
+
+                        // Refresh RecyclerView
+                        laundryId?.let { laundryId ->
+                            loadService(tokenAuth, laundryId)
+                        }
                     }
                 } catch (e: Exception) {
                     Log.d("Error Message ", e.toString())
@@ -119,6 +131,14 @@ class ServiceActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    private fun gotoLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags =
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun simpanApi(tokenAuth: String, laundryId: String, jenis: String, price: String) {
