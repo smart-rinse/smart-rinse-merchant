@@ -13,6 +13,7 @@ import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import labs.nusantara.smartrinsebusiness.databinding.ActivityMerchantBinding
+import labs.nusantara.smartrinsebusiness.ui.login.LoginActivity
 import labs.nusantara.smartrinsebusiness.utils.ViewModelFactory
 import labs.nusantara.smartrinsebusiness.utils.reduceFileImage
 import labs.nusantara.smartrinsebusiness.utils.uriToFile
@@ -30,6 +31,8 @@ class MerchantActivity : AppCompatActivity() {
     private lateinit var factory: ViewModelFactory
     private val merchantViewModel: MerchantViewModel by viewModels { factory }
     private var token: String? = null
+    private var photoUrl: String? = null
+    private var laundryIdApi: String? = null
     private var getFile: File? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +47,7 @@ class MerchantActivity : AppCompatActivity() {
 
         loadData()
         binding.btnSave.setOnClickListener { processSave() }
+        binding.btnUpdate.setOnClickListener { processUpdate() }
         binding.imgUpload.setOnClickListener { startGallery() }
 
     }
@@ -71,47 +75,45 @@ class MerchantActivity : AppCompatActivity() {
                     val data = listData?.firstOrNull()
 
                     data?.let {
-                        val data = listData.firstOrNull()
-                        data?.let {
-                            val namaMerchant =
-                                Editable.Factory.getInstance().newEditable(it.namaLaundry)
-                            val tahunMerchant =
-                                Editable.Factory.getInstance().newEditable(it.tanggalBerdiri)
-                            val alamatMerchant =
-                                Editable.Factory.getInstance().newEditable(it.alamat)
-                            val latitudeMerchant =
-                                Editable.Factory.getInstance().newEditable(it.latitude)
-                            val longitudeMerchant =
-                                Editable.Factory.getInstance().newEditable(it.longitude)
-                            val telpMerchant =
-                                Editable.Factory.getInstance().newEditable(it.telephone)
-                            val bukaMerchant =
-                                Editable.Factory.getInstance().newEditable(it.jamBuka)
-                            val tutupMerchant =
-                                Editable.Factory.getInstance().newEditable(it.jamTutup)
-                            val rekMerchant =
-                                Editable.Factory.getInstance().newEditable(it.rekening.toString())
-                            val bankMerchant = Editable.Factory.getInstance().newEditable(it.bank)
+                        val namaMerchant =
+                            Editable.Factory.getInstance().newEditable(it.namaLaundry)
+                        val tahunMerchant =
+                            Editable.Factory.getInstance().newEditable(it.tanggalBerdiri)
+                        val alamatMerchant =
+                            Editable.Factory.getInstance().newEditable(it.alamat)
+                        val latitudeMerchant =
+                            Editable.Factory.getInstance().newEditable(it.latitude)
+                        val longitudeMerchant =
+                            Editable.Factory.getInstance().newEditable(it.longitude)
+                        val telpMerchant =
+                            Editable.Factory.getInstance().newEditable(it.telephone)
+                        val bukaMerchant =
+                            Editable.Factory.getInstance().newEditable(it.jamBuka)
+                        val tutupMerchant =
+                            Editable.Factory.getInstance().newEditable(it.jamTutup)
+                        val rekMerchant =
+                            Editable.Factory.getInstance().newEditable(it.rekening.toString())
+                        val bankMerchant = Editable.Factory.getInstance().newEditable(it.bank)
 
-                            binding.edtName.text = namaMerchant
-                            binding.edtYear.text = tahunMerchant
-                            binding.edtAddress.text = alamatMerchant
-                            binding.edtLatitude.text = latitudeMerchant
-                            binding.edtLongitude.text = longitudeMerchant
-                            binding.edtTelp.text = telpMerchant
-                            binding.edtOpen.text = bukaMerchant
-                            binding.edtClose.text = tutupMerchant
-                            binding.edtRekening.text = rekMerchant
-                            binding.edtBank.text = bankMerchant
+                        binding.edtName.text = namaMerchant
+                        binding.edtYear.text = tahunMerchant
+                        binding.edtAddress.text = alamatMerchant
+                        binding.edtLatitude.text = latitudeMerchant
+                        binding.edtLongitude.text = longitudeMerchant
+                        binding.edtTelp.text = telpMerchant
+                        binding.edtOpen.text = bukaMerchant
+                        binding.edtClose.text = tutupMerchant
+                        binding.edtRekening.text = rekMerchant
+                        binding.edtBank.text = bankMerchant
 
-                            if (it.photo.isNotEmpty()) {
-                                Glide.with(this@MerchantActivity)
-                                    .load(data.photo)
-                                    .circleCrop()
-                                    .transition(DrawableTransitionOptions.withCrossFade(500))
-                                    .into(binding.imageMerchant)
-                            }
-
+                        photoUrl = it.photo
+                        laundryIdApi = it.id
+                        if (it.photo.isNotEmpty()) {
+                            Glide.with(this@MerchantActivity)
+                                .load(data.photo)
+                                .circleCrop()
+                                .transition(DrawableTransitionOptions.withCrossFade(500))
+                                .into(binding.imageMerchant)
                         }
 
                     }
@@ -144,12 +146,12 @@ class MerchantActivity : AppCompatActivity() {
         }
     }
 
-    private fun processSave() {
+    private fun processUpdate() {
         merchantViewModel.getSession().observe(this@MerchantActivity) {
             token = it.token
             val tokenAuth = it.token
             if (!it.isLogin) {
-
+                gotoLogin()
             } else {
                 try {
                     val namaMerchant =
@@ -186,7 +188,130 @@ class MerchantActivity : AppCompatActivity() {
                                     requestImageFile
                                 )
 
-                            processSave(
+                            laundryIdApi?.let { laundryId ->
+                                sendUpdate(
+                                    tokenAuth,
+                                    laundryId,
+                                    namaMerchant,
+                                    tahunMerchant,
+                                    alamatMerchant,
+                                    latitudeMerchant,
+                                    longitudeMerchant,
+                                    bukaMerchant,
+                                    tutupMerchant,
+                                    rekMerchant,
+                                    bankMerchant,
+                                    telpMerchant,
+                                    imageMultipart,
+                                )
+                            }
+                        }
+                        getFile == null -> {
+                            Toast.makeText(this, "Masukan foto merchant untuk melakukan perubahan.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.d("Error Message ", e.toString())
+                }
+
+
+            }
+        }
+    }
+
+    private fun gotoLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags =
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    private fun sendUpdate(
+        tokenAuth: String,
+        laundryId: String,
+        namaMerchant: RequestBody,
+        tahunMerchant: RequestBody,
+        alamatMerchant: RequestBody,
+        latitudeMerchant: RequestBody,
+        longitudeMerchant: RequestBody,
+        bukaMerchant: RequestBody,
+        tutupMerchant: RequestBody,
+        rekMerchant: RequestBody,
+        bankMerchant: RequestBody,
+        telpMerchant: RequestBody,
+        imageMultipart: MultipartBody.Part
+    ) {
+        merchantViewModel.putMerchant(
+            tokenAuth,
+            laundryId,
+            namaMerchant,
+            tahunMerchant,
+            alamatMerchant,
+            latitudeMerchant,
+            longitudeMerchant,
+            bukaMerchant,
+            tutupMerchant,
+            rekMerchant,
+            bankMerchant,
+            telpMerchant,
+            imageMultipart
+        )
+        merchantViewModel.isLoading.observe(this) { load ->
+            showLoading(load)
+        }
+        merchantViewModel.toastText.observe(this@MerchantActivity) {
+            it.getContentIfNotHandled()?.let { toastText ->
+                Toast.makeText(
+                    this@MerchantActivity, toastText, Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun processSave() {
+        merchantViewModel.getSession().observe(this@MerchantActivity) {
+            token = it.token
+            val tokenAuth = it.token
+            if (!it.isLogin) {
+                gotoLogin()
+            } else {
+                try {
+                    val namaMerchant =
+                        binding.edtName.text.toString().toRequestBody("text/plain".toMediaType())
+                    val tahunMerchant =
+                        binding.edtYear.text.toString().toRequestBody("text/plain".toMediaType())
+                    val alamatMerchant =
+                        binding.edtAddress.text.toString().toRequestBody("text/plain".toMediaType())
+                    val latitudeMerchant = binding.edtLatitude.text.toString()
+                        .toRequestBody("text/plain".toMediaType())
+                    val longitudeMerchant = binding.edtLongitude.text.toString()
+                        .toRequestBody("text/plain".toMediaType())
+                    val bukaMerchant =
+                        binding.edtOpen.text.toString().toRequestBody("text/plain".toMediaType())
+                    val tutupMerchant =
+                        binding.edtClose.text.toString().toRequestBody("text/plain".toMediaType())
+                    val rekMerchant = binding.edtRekening.text.toString()
+                        .toRequestBody("text/plain".toMediaType())
+                    val bankMerchant =
+                        binding.edtBank.text.toString().toRequestBody("text/plain".toMediaType())
+                    val telpMerchant =
+                        binding.edtTelp.text.toString().toRequestBody("text/plain".toMediaType())
+
+
+                    when {
+                        getFile != null -> {
+                            val file = reduceFileImage(getFile as File)
+                            val requestImageFile =
+                                file.asRequestBody("image/jpeg".toMediaTypeOrNull())
+                            val imageMultipart: MultipartBody.Part =
+                                MultipartBody.Part.createFormData(
+                                    "photo",
+                                    file.name,
+                                    requestImageFile
+                                )
+
+                            sendSave(
                                 tokenAuth,
                                 namaMerchant,
                                 tahunMerchant,
@@ -211,7 +336,7 @@ class MerchantActivity : AppCompatActivity() {
         }
     }
 
-    private fun processSave(
+    private fun sendSave(
         tokenAuth: String,
         namaMerchant: RequestBody,
         tahunMerchant: RequestBody,

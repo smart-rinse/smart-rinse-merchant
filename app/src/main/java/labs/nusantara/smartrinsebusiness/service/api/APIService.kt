@@ -40,6 +40,24 @@ interface APIService {
         @Part photo: MultipartBody.Part
     ): Call<MerchantCreateResponse>
 
+    @Multipart
+    @PUT("laundry/{laundryId}")
+    fun putMerchantPhoto(
+        @Header("Authorization") token: String,
+        @Path("laundryId") laundryId: String,
+        @Part("nama_laundry") nama_laundry: RequestBody,
+        @Part("tanggal_berdiri") tanggal_berdiri: RequestBody,
+        @Part("alamat") alamat: RequestBody,
+        @Part("latitude") latitude: RequestBody,
+        @Part("longitude") longitude: RequestBody,
+        @Part("jam_buka") jam_buka: RequestBody,
+        @Part("jam_tutup") jam_tutup: RequestBody,
+        @Part("rekening") rekening: RequestBody,
+        @Part("bank") bank: RequestBody,
+        @Part("telephone") telephone: RequestBody,
+        @Part photo: MultipartBody.Part
+    ): Call<MerchantPutResponse>
+
     @FormUrlEncoded
     @POST("service/{laundryId}")
     fun postService(

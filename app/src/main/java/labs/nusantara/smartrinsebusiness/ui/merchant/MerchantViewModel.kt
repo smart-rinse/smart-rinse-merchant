@@ -54,6 +54,40 @@ class MerchantViewModel(private val repository: LaundryRepository) : ViewModel()
         }
     }
 
+    fun putMerchant(
+        token: String,
+        laundryId: String,
+        namaMerchant: RequestBody,
+        tglBerdiri: RequestBody,
+        alamat: RequestBody,
+        latitude: RequestBody,
+        longitude: RequestBody,
+        jamBuka: RequestBody,
+        jamTutup: RequestBody,
+        rekening: RequestBody,
+        bank: RequestBody,
+        telp: RequestBody,
+        imageMultipart: MultipartBody.Part
+    ) {
+        viewModelScope.launch {
+            repository.putMerchant(
+                token,
+                laundryId,
+                namaMerchant,
+                tglBerdiri,
+                alamat,
+                latitude,
+                longitude,
+                jamBuka,
+                jamTutup,
+                rekening,
+                bank,
+                telp,
+                imageMultipart
+            )
+        }
+    }
+
     fun getMerchantInfo(token: String) {
         viewModelScope.launch {
             repository.getMerchantOwner(token)

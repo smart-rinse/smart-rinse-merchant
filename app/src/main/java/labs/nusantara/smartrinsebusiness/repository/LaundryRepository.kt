@@ -38,6 +38,9 @@ class LaundryRepository private constructor(
     private val _merchantCreateResponse = MutableLiveData<MerchantCreateResponse>()
     val merchantCreateResponse: LiveData<MerchantCreateResponse> = _merchantCreateResponse
 
+    private val _merchantPutResponse = MutableLiveData<MerchantPutResponse>()
+    val merchantPutResponse: LiveData<MerchantPutResponse> = _merchantPutResponse
+
     private val _serviceCreateResponse = MutableLiveData<ServiceCreateResponse>()
     val serviceCreateResponse: LiveData<ServiceCreateResponse> = _serviceCreateResponse
 
@@ -162,7 +165,7 @@ class LaundryRepository private constructor(
                     _merchantCreateResponse.value = response.body()
                     _toastText.value = Event(response.body()?.message.toString())
                 } else {
-                    _toastText.value = Event("Pembuatan mechant laundry gagal.")
+                    _toastText.value = Event("Pembuatan merchant gagal dilakukan.")
                     Log.e(
                         TAG,
                         "ErrorMessage: ${response.message()}, ${response.body()?.message.toString()}"
@@ -171,6 +174,72 @@ class LaundryRepository private constructor(
             }
 
             override fun onFailure(call: Call<MerchantCreateResponse>, t: Throwable) {
+                _toastText.value = Event(t.message.toString())
+                Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
+            }
+        })
+    }
+
+
+    //--------------------------------------------------------
+    //PUT MERCHANT
+    //--------------------------------------------------------
+    fun putMerchant(
+        token: String,
+        laundryId: String,
+        namaMerchant: RequestBody,
+        tglBerdiri: RequestBody,
+        alamat: RequestBody,
+        latitude: RequestBody,
+        longitude: RequestBody,
+        jamBuka: RequestBody,
+        jamTutup: RequestBody,
+        rekening: RequestBody,
+        bank: RequestBody,
+        telp: RequestBody,
+        imageMultipart: MultipartBody.Part
+    ) {
+        _isLoading.value = true
+        val client = apiService.putMerchantPhoto(
+            token,
+            laundryId,
+            namaMerchant,
+            tglBerdiri,
+            alamat,
+            latitude,
+            longitude,
+            jamBuka,
+            jamTutup,
+            rekening,
+            bank,
+            telp,
+            imageMultipart
+        )
+
+        Log.d("DATA CLIENT : ", client.toString())
+        Log.d("DATA : ", "$token, $namaMerchant, $tglBerdiri, $alamat, $latitude, $longitude, $jamBuka, $jamTutup, $rekening, $imageMultipart")
+
+        client.enqueue(object : Callback<MerchantPutResponse> {
+            override fun onResponse(
+                call: Call<MerchantPutResponse>,
+                response: Response<MerchantPutResponse>
+            ) {
+                _isLoading.value = false
+                Log.d("EE : ", response.toString())
+                Log.d("EE : ", response.body().toString())
+                if (response.isSuccessful && response.body() != null) {
+                    _merchantPutResponse.value = response.body()
+                    _toastText.value = Event(response.body()?.message.toString())
+                } else {
+                    _toastText.value = Event("Perubahan data merchant gagal dilakukan.")
+                    Log.e(
+                        TAG,
+                        "ErrorMessage: ${response.message()}, ${response.body()?.message.toString()}"
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<MerchantPutResponse>, t: Throwable) {
                 _toastText.value = Event(t.message.toString())
                 Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
             }

@@ -66,9 +66,8 @@ class LoginActivity : AppCompatActivity() {
                         this@LoginActivity, toastTextNew, Toast.LENGTH_SHORT
                     ).show()
                 }else {
-                    val toastTextNew = "Login Berhasil"
                     Toast.makeText(
-                        this@LoginActivity, toastTextNew, Toast.LENGTH_SHORT
+                        this@LoginActivity, toastText, Toast.LENGTH_SHORT
                     ).show()
                 }
 
