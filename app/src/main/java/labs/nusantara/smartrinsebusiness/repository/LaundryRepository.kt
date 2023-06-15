@@ -53,6 +53,12 @@ class LaundryRepository private constructor(
     private val _delServiceOwner = MutableLiveData<ServiceDelResponse>()
     val delServiceOwner: LiveData<ServiceDelResponse> = _delServiceOwner
 
+    private val _listTrxOwner = MutableLiveData<List<List<OrdersItemItem>>>()
+    val listTrxOwner: LiveData<List<List<OrdersItemItem>>> = _listTrxOwner
+
+    private val _listStatusTrx = MutableLiveData<TransactionStatus>()
+    val listStatusTrx: LiveData<TransactionStatus> = _listStatusTrx
+
     //--------------------------------------------------------
     //POST REGISTER
     //--------------------------------------------------------
@@ -378,6 +384,80 @@ class LaundryRepository private constructor(
             }
 
             override fun onFailure(call: Call<ServiceDelResponse>, t: Throwable) {
+                _isLoading.value = false
+                _toastText.value = Event("No internet connection")
+                Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
+            }
+        })
+    }
+
+
+    //--------------------------------------------------------
+    //GET ORDER TRANSACTION OWNER
+    //--------------------------------------------------------
+    fun getOrderTrx(token: String) {
+        _isLoading.value = true
+        val client = apiService.getOwnerTrx(token)
+
+        client.enqueue(object : Callback<OrderGetResponse> {
+            @SuppressLint("NullSafeMutableLiveData")
+            override fun onResponse(
+                call: Call<OrderGetResponse>,
+                response: Response<OrderGetResponse>
+            ) {
+                _isLoading.value = false
+                Log.d("E : ", response.toString())
+                Log.d("EE : ", response.body().toString())
+                Log.d("EEE : ", response.body()?.orders.toString())
+                val listData = response.body()?.orders
+                if (response.isSuccessful) {
+                    val lengthItem = listData?.size
+                    if (lengthItem != null) {
+                        _listTrxOwner.value = listData
+                    } else {
+                        _toastText.value = Event("Order history not found")
+                    }
+                } else {
+                    _toastText.value = Event(response.message())
+                    Log.e(TAG, "ErrorMessage: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<OrderGetResponse>, t: Throwable) {
+                _isLoading.value = false
+                _toastText.value = Event("No internet connection")
+                Log.e(TAG, "ErrorMessage: ${t.message.toString()}")
+            }
+        })
+    }
+
+    //--------------------------------------------------------
+    //PUT ORDER TRANSACTION OWNER
+    //--------------------------------------------------------
+    fun putOrderTrx(token: String, trxId: String) {
+        _isLoading.value = true
+        val client = apiService.putOwnerTrx(token, trxId)
+
+        client.enqueue(object : Callback<TrxUpdateResponse> {
+            @SuppressLint("NullSafeMutableLiveData")
+            override fun onResponse(
+                call: Call<TrxUpdateResponse>,
+                response: Response<TrxUpdateResponse>
+            ) {
+                _isLoading.value = false
+                Log.d("E : ", response.toString())
+                Log.d("EE : ", response.body().toString())
+                Log.d("EEE : ", response.body()?.transaction.toString())
+                val listData = response.body()?.transaction
+                if (response.isSuccessful) {
+                    _listStatusTrx.value = listData
+                } else {
+                    _toastText.value = Event(response.message())
+                    Log.e(TAG, "ErrorMessage: ${response.message()}")
+                }
+            }
+
+            override fun onFailure(call: Call<TrxUpdateResponse>, t: Throwable) {
                 _isLoading.value = false
                 _toastText.value = Event("No internet connection")
                 Log.e(TAG, "ErrorMessage: ${t.message.toString()}")

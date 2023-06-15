@@ -8,7 +8,9 @@ import labs.nusantara.smartrinsebusiness.ui.home.HomeViewModel
 import labs.nusantara.smartrinsebusiness.ui.layanan.ServiceViewModel
 import labs.nusantara.smartrinsebusiness.ui.login.LoginViewModel
 import labs.nusantara.smartrinsebusiness.ui.merchant.MerchantViewModel
+import labs.nusantara.smartrinsebusiness.ui.order.OrderViewModel
 import labs.nusantara.smartrinsebusiness.ui.register.RegisterViewModel
+import labs.nusantara.smartrinsebusiness.ui.setting.SettingViewModel
 
 class ViewModelFactory (private val repository: LaundryRepository) :
     ViewModelProvider.NewInstanceFactory() {
@@ -30,6 +32,12 @@ class ViewModelFactory (private val repository: LaundryRepository) :
             }
             modelClass.isAssignableFrom(ServiceViewModel::class.java) -> {
                 ServiceViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(OrderViewModel::class.java) -> {
+                OrderViewModel(repository) as T
+            }
+            modelClass.isAssignableFrom(SettingViewModel::class.java) -> {
+                SettingViewModel(repository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }

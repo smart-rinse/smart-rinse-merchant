@@ -5,13 +5,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import labs.nusantara.smartrinsebusiness.R
 import labs.nusantara.smartrinsebusiness.databinding.ActivityHomeBinding
 import labs.nusantara.smartrinsebusiness.ui.layanan.ServiceActivity
 import labs.nusantara.smartrinsebusiness.ui.login.LoginActivity
 import labs.nusantara.smartrinsebusiness.ui.merchant.MerchantActivity
+import labs.nusantara.smartrinsebusiness.ui.order.OrderActivity
+import labs.nusantara.smartrinsebusiness.ui.setting.SettingActivity
 import labs.nusantara.smartrinsebusiness.utils.ViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
@@ -34,8 +35,9 @@ class HomeActivity : AppCompatActivity() {
         //Function to Menu
         binding.cardMerchantTopLeft.setOnClickListener { gotoMerchant() }
         binding.cardServiceTopRight.setOnClickListener { gotoService() }
-        binding.cardSettingBottomLeft.setOnClickListener { gotoSetting() }
-        binding.cardExitBottomRight.setOnClickListener { gotoExit() }
+        binding.cardOrderBottomLeft.setOnClickListener { gotoOrder() }
+        binding.cardSettingBottomRight.setOnClickListener { gotoSetting() }
+        binding.btnLogout.setOnClickListener { gotoExit() }
     }
 
     private fun gotoMerchant() {
@@ -48,8 +50,14 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun gotoOrder() {
+        val intent = Intent(this, OrderActivity::class.java)
+        startActivity(intent)
+    }
+
     private fun gotoSetting() {
-        Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, SettingActivity::class.java)
+        startActivity(intent)
     }
 
     private fun gotoExit() {

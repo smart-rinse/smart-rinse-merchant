@@ -83,4 +83,15 @@ interface APIService {
         @Header("Authorization") token: String,
         @Path("serviceId") serviceId: Int
     ): Call<ServiceDelResponse>
+
+    @GET("owner/transaction")
+    fun getOwnerTrx(
+        @Header("Authorization") token: String
+    ): Call<OrderGetResponse>
+
+    @PUT("owner/status/{trxId}")
+    fun putOwnerTrx(
+        @Header("Authorization") token: String,
+        @Path("trxId") trxId: String
+    ): Call<TrxUpdateResponse>
 }

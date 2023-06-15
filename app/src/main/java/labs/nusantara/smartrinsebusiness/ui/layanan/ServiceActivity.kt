@@ -84,6 +84,7 @@ class ServiceActivity : AppCompatActivity() {
         }
 
         serviceViewModel.listServiceOwner.observe(this@ServiceActivity) { listData ->
+            Log.d("LIST : ", listData.toString())
             if (listData.isNotEmpty()) {
                 binding.imageNotFound.visibility = View.GONE
                 binding.tvNotFound.visibility = View.GONE
